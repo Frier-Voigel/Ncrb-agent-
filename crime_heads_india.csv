@@ -1,0 +1,171 @@
+sl,crime_head,level,cases_2022,rate_2022,cases_2023,rate_2023,cases_2024_ipc,cases_2024_bns,cases_2024,rate_2024,pct_share_2024
+1,Rape,head,31516.0,2.3,29670.0,2.1,19683.0,9853.0,29536.0,2.1,0.8
+2,Attempt to Commit Rape,head,3288.0,0.2,2796.0,0.2,1503.0,1058.0,2561.0,0.2,0.1
+3,Sexual Intercourse by employing deceitful means,head,,,,,0.0,1325.0,1325.0,0.1,0.0
+4,Disclosure of Identity of Victim,head,,,,,0.0,11.0,11.0,0.0,0.0
+5,Assault on Women with Intent to Outrage her Modesty,head,44867.0,3.3,45086.0,3.2,25829.0,22474.0,48303.0,3.4,1.4
+6,Sexual Harassment,head,17809.0,1.3,17544.0,1.3,8130.0,7479.0,15609.0,1.1,0.4
+6A,at Office Premises,sub_head,419.0,0.0,381.0,0.0,305.0,83.0,388.0,0.0,0.0
+6B,at Work Premises (Shops/Malls/Factories/Home etc),sub_head,,,,,0.0,512.0,512.0,0.0,0.0
+6C,In Public Transport System,sub_head,422.0,0.0,525.0,0.0,291.0,168.0,459.0,0.0,0.0
+6D,at Public Places/Pathway,sub_head,,,,,0.0,1469.0,1469.0,0.1,0.0
+6E,In Shelter Homes for women and Children,sub_head,523.0,0.0,401.0,0.0,105.0,84.0,189.0,0.0,0.0
+6D,Other Places,sub_head,16445.0,1.2,16237.0,1.2,7429.0,5163.0,12592.0,0.9,0.4
+7,Assault or use of Criminal Force on women with intent to Disrobe,head,9101.0,0.7,9039.0,0.6,4463.0,3946.0,8409.0,0.6,0.2
+8,Voyeurism,head,1451.0,0.1,1727.0,0.1,827.0,895.0,1722.0,0.1,0.0
+9,Stalking,head,10116.0,0.7,10495.0,0.8,5374.0,4491.0,9865.0,0.7,0.3
+10,Insult to the Modesty of Women,head,,,,,4495.0,4843.0,9338.0,0.7,0.3
+11,Dowry Deaths,head,6450.0,0.5,6156.0,0.4,3057.0,2680.0,5737.0,0.4,0.2
+12,Cruelty by Husband or his Relatives,head,,,,,78470.0,41757.0,120227.0,8.6,3.4
+13,"Kidnapping, Abducting or Inducing of Women to compel her for marriage",head,,,,,17415.0,11534.0,28949.0,2.1,0.8
+14,Offences of Miscarriage,head,236.0,,309.0,,172.0,127.0,299.0,0.0,0.0
+15,Foeticide,head,102.0,,88.0,,59.0,81.0,140.0,0.0,0.0
+16,Infanticide,head,83.0,,67.0,,31.0,25.0,56.0,0.0,0.0
+17,Exposure and Abandonment,head,818.0,,653.0,,331.0,406.0,737.0,0.1,0.0
+18,"Hiring, employing or engaging a child to commit an offence",head,,,,,0.0,1.0,1.0,0.0,0.0
+19,Procuration of Children,head,,,,,1019.0,654.0,1673.0,0.1,0.0
+20,Kidnapping or Abducting a child with intent to steal from its persons,head,,,,,0.0,16.0,16.0,0.0,0.0
+21,Selling of Child for Prostitution,head,9.0,0.0,12.0,0.0,4.0,8.0,12.0,0.0,0.0
+22,Buying of Child for Prostitution,head,3.0,0.0,4.0,0.0,1.0,3.0,4.0,0.0,0.0
+,Offences againt Women and Child (Total of Sl. 1-22),group_total,,,,,170863.0,113667.0,284530.0,20.3,8.0
+23,Murder,head,28522.0,2.1,27721.0,2.0,14440.0,12609.0,27049.0,1.9,0.8
+23.1,Murder,sub_head,,,,,14440.0,12487.0,26927.0,1.9,0.8
+23.2,Murder by Group of 5 or more persons,sub_head,,,,,0.0,112.0,112.0,0.0,0.0
+23.3,Murder by life convict,sub_head,,,,,0.0,10.0,10.0,0.0,0.0
+24,Culpable Homicide not amounting to Murder,head,3621.0,0.3,3557.0,0.3,2075.0,1793.0,3868.0,0.3,0.1
+25,Causing Death by Negligence,head,159096.0,11.5,165971.0,11.9,89784.0,79709.0,169493.0,12.1,4.8
+25A,Deaths due to Negligence relating to Road Accidents,sub_head,150998.0,10.9,157831.0,11.3,86373.0,76127.0,162500.0,11.6,4.6
+25A.1,Hit and Run,sub_head,47806.0,3.5,51780.0,3.7,29169.0,24061.0,53230.0,3.8,1.5
+25A.2,Other Accidents,sub_head,103192.0,7.5,106051.0,7.6,57204.0,52066.0,109270.0,7.8,3.1
+25B,Deaths due to Negligence relating to Rail Accidents,sub_head,19.0,0.0,7.0,0.0,20.0,194.0,214.0,0.0,0.0
+25C,Deaths due to Medical Negligence,sub_head,118.0,0.0,114.0,0.0,82.0,787.0,869.0,0.1,0.0
+25D,Deaths due to Negligence of Civic Bodies,sub_head,70.0,0.0,60.0,0.0,16.0,38.0,54.0,0.0,0.0
+25E,Deaths due to other Negligence,sub_head,7891.0,0.6,7959.0,0.6,3293.0,2563.0,5856.0,0.4,0.2
+26,Abetment of Suicide,head,9400.0,0.7,9386.0,0.7,4843.0,4050.0,8893.0,0.6,0.3
+27,Attempt to Commit Murder,head,57256.0,4.1,56549.0,4.1,30998.0,27846.0,58844.0,4.2,1.7
+28,Attempt to commit Culpable Homicide,head,10149.0,0.7,11954.0,0.9,7111.0,6274.0,13385.0,1.0,0.4
+29,Organised Crime,head,,,,,0.0,840.0,840.0,0.1,0.0
+30,Petty Organised Crime,head,,,,,0.0,876.0,876.0,0.1,0.0
+31,Terrorist Act,head,,,,,0.0,24.0,24.0,0.0,0.0
+32,Hurt,head,627676.0,45.5,636767.0,45.7,257353.0,184643.0,441996.0,31.5,12.5
+32A,Simple Hurt,sub_head,518792.0,37.6,537179.0,38.6,186313.0,0.0,186313.0,13.3,5.3
+32A.1,Voluntarily Causing Simple Hurt,sub_head,308238.0,22.3,325028.0,23.3,,,,,
+32A.2,Voluntarily causing hurt by Dangerous weapons or means,sub_head,177933.0,12.9,180866.0,13.0,161438.0,0.0,161438.0,11.5,4.6
+32A.3,Voluntarily Causing hurt/Force to deter public servant from his duty,sub_head,13969.0,1.0,13488.0,1.0,6967.0,0.0,6967.0,0.5,0.2
+32A.4,Causing Hurt by act endangering life/safety of others,sub_head,10160.0,0.7,8408.0,0.6,6890.0,0.0,6890.0,0.5,0.2
+32A.5,Other Simple Hurt,sub_head,8492.0,0.6,9389.0,0.7,11018.0,0.0,11018.0,0.8,0.3
+32B,Grievous Hurt,sub_head,108884.0,7.9,99588.0,7.2,71040.0,184643.0,255683.0,18.2,7.2
+32B.1,Voluntarily causing grievous hurt,sub_head,84975.0,6.2,72278.0,5.2,52873.0,70392.0,123265.0,8.8,3.5
+32B.2,Grievous Hurt resulting persistent vegitative state or permanent,sub_head,,,,,0.0,1092.0,1092.0,0.1,0.0
+32B.3,Grievous hurt caused by a group of 5 or more persons,sub_head,,,,,0.0,330.0,330.0,0.0,0.0
+32B.4,Voluntarity causing hurt or grievous hurt by dangerous weapons or means,sub_head,19163.0,1.4,21579.0,1.5,11681.0,76360.0,88041.0,6.3,2.5
+32B.5,Voluntarily causing hurt or grievous hurt/Assault or criminal force to deter public servant from his duty,sub_head,1009.0,0.1,1166.0,0.1,886.0,5288.0,6174.0,0.4,0.2
+32B.6,Acid Attack,sub_head,202.0,0.0,207.0,0.0,122.0,85.0,207.0,0.0,0.0
+32G,Attempt to Acid Attack,sub_head,71.0,0.0,65.0,0.0,29.0,39.0,68.0,0.0,0.0
+32B.7,Act endangering life or personal safety of others,sub_head,2748.0,0.2,3691.0,0.3,3698.0,12640.0,16338.0,1.2,0.5
+32.8,Other Grevious Hurt,sub_head,716.0,0.1,602.0,0.0,1751.0,18417.0,20168.0,1.4,0.6
+33,Wrongful Restraint/Confinement,head,25449.0,1.8,32575.0,2.3,24213.0,26668.0,50881.0,3.6,1.4
+34,Kidnapping and Abduction,head,107588.0,7.8,113564.0,8.2,46637.0,49442.0,96079.0,6.8,2.7
+34A,Kidnapping and Abduction,sub_head,63122.0,4.6,67480.0,4.8,39062.0,42133.0,81195.0,5.8,2.3
+34B,Kidnapping and Abduction for the Purpose of Begging,sub_head,98.0,0.0,65.0,0.0,10.0,15.0,25.0,0.0,0.0
+34C,Kidnapping and Abduction in order to Murder,sub_head,454.0,0.0,355.0,0.0,171.0,147.0,318.0,0.0,0.0
+34D,Kidnapping for Ransom,sub_head,615.0,0.0,615.0,0.0,317.0,387.0,704.0,0.1,0.0
+34E$,Kidnapping and Abducting of Women to compel her for marriage,sub_head,28656.0,2.1,30496.0,2.2,,,,,
+34F$,Procuration of Children,sub_head,1827.0,0.1,1858.0,0.1,,,,,
+34G,Importation of Girl or Boy from Foreign Country,sub_head,1.0,0.0,2.0,0.0,1.0,3.0,4.0,0.0,0.0
+34G.1,Girls (Below 21 Yrs),sub_head,,,,,1.0,1.0,2.0,0.0,0.0
+34G.2,Boys (Below 18 Yrs),sub_head,,,,,0.0,2.0,2.0,0.0,0.0
+34H,Other Kidnapping & Abducion,sub_head,12815.0,0.9,12693.0,0.9,7076.0,6757.0,13833.0,1.0,0.4
+E1,Attempt to Commit Suicide,legacy,1769.0,0.1,1717.0,0.1,,,,,
+E2,Human Trafficking,legacy,1200.0,0.1,1425.0,0.1,,,,,
+E3,Exploitation of Trafficked Person,legacy,253.0,0.0,195.0,0.0,,,,,
+E4,Unnatural Offences,legacy,987.0,0.1,888.0,0.1,,,,,
+,Offences against Human Body (Total of Sl.23-34 + E1-E4),group_total,1158815.0,84.0,1185915.0,85.2,477454.0,394774.0,872228.0,62.1,24.6
+,Offences of Woman & Child and Human Body (Total of Sl.1 - 34),group_total,,,,,648317.0,508441.0,1156758.0,82.3,32.6
+35,Offences against State,head,68.0,0.0,58.0,0.0,26.0,57.0,83.0,0.0,0.0
+35A,Act endangering sovereignity unity and integrity of India,sub_head,,,,,0.0,28.0,28.0,0.0,0.0
+35B,Other Offences against State,sub_head,48.0,0.0,48.0,0.0,26.0,29.0,55.0,0.0,0.0
+E5,Sedition,legacy,20.0,0.0,10.0,0.0,,,,,
+,Offences against the State (Total),group_total,68.0,0.0,58.0,0.0,26.0,57.0,83.0,0.0,0.0
+36,Unlawful Assembly,head,11391.0,0.8,10002.0,0.7,3784.0,3290.0,7074.0,0.5,0.2
+37,Rioting,head,37816.0,2.7,39260.0,2.8,17105.0,13243.0,30348.0,2.2,0.9
+37.1,Communal/Religious,sub_head,272.0,0.0,272.0,0.0,182.0,167.0,349.0,0.0,0.0
+37.2,Ethnic or Community Groups Clash or Agitations,sub_head,,,,,0.0,30.0,30.0,0.0,0.0
+37.3,Sectarian,sub_head,76.0,0.0,96.0,0.0,55.0,25.0,80.0,0.0,0.0
+37.4,Industrial,sub_head,121.0,0.0,97.0,0.0,46.0,39.0,85.0,0.0,0.0
+37.5,Political,sub_head,941.0,0.1,565.0,0.0,372.0,261.0,633.0,0.0,0.0
+37.6,Caste Conflict,sub_head,179.0,0.0,203.0,0.0,91.0,75.0,166.0,0.0,0.0
+37.7,Agrarian,sub_head,911.0,0.1,769.0,0.1,323.0,203.0,526.0,0.0,0.0
+37.8,Students,sub_head,210.0,0.0,251.0,0.0,53.0,91.0,144.0,0.0,0.0
+37.9,Money Dispute,sub_head,637.0,0.0,442.0,0.0,319.0,264.0,583.0,0.0,0.0
+37.10,Water Dispute,sub_head,197.0,0.0,121.0,0.0,180.0,123.0,303.0,0.0,0.0
+37.11,Land/Property Dispute,sub_head,7065.0,0.5,5380.0,0.4,2758.0,1881.0,4639.0,0.3,0.1
+37.12,Family Disputes,sub_head,3035.0,0.2,2243.0,0.2,1002.0,730.0,1732.0,0.1,0.0
+37.13,Enmity/Rivalry,sub_head,4771.0,0.3,4279.0,0.3,2666.0,2155.0,4821.0,0.3,0.1
+37.14,Electricity/Power Supply Disputes,sub_head,10.0,0.0,37.0,0.0,8.0,14.0,22.0,0.0,0.0
+37.15,Sudden Quarrel/Provocation,sub_head,,,,,0.0,807.0,807.0,0.1,0.0
+37.16,Rioting while in Aandolan/Morcha,sub_head,781.0,0.1,443.0,0.0,233.0,189.0,422.0,0.0,0.0
+37.17,Rioting/Attacks on Police Personnel or Govt Servants,sub_head,667.0,0.0,528.0,0.0,268.0,227.0,495.0,0.0,0.0
+37.18,Other Rioting,sub_head,17943.0,1.3,23534.0,1.7,8549.0,5962.0,14511.0,1.0,0.4
+38,Promoting enmity between groups,head,1491.0,0.1,2111.0,0.2,904.0,697.0,1601.0,0.1,0.0
+39,"Imputation, assertions prejudicial to national integration",head,79.0,0.0,44.0,0.0,17.0,23.0,40.0,0.0,0.0
+40,Affray,head,6305.0,0.5,6830.0,0.5,2938.0,2348.0,5286.0,0.4,0.1
+,Offences against Public Tranquillity (Total of Sl. 36-40),group_total,57082.0,4.1,58247.0,4.2,24748.0,19601.0,44349.0,3.2,1.3
+41,Theft,head,652731.0,47.3,689580.0,49.5,321139.0,300806.0,621945.0,44.3,17.5
+41A,Household Theft (Dwelling Units/Houses),sub_head,,,,,0.0,29813.0,29813.0,2.1,0.8
+41B,Vechicle Theft,sub_head,252569.0,18.3,250630.0,18.0,122134.0,110899.0,233033.0,16.6,6.6
+41C,Theft fom Vehicles,sub_head,,,,,0.0,5643.0,5643.0,0.4,0.2
+42D,Theft of idol or icon from Place of Worship,sub_head,,,,,0.0,465.0,465.0,0.1,0.0
+41E,Theft of Government Property,sub_head,,,,,0.0,1037.0,1037.0,0.1,0.0
+41F,Theft by servant/employee,sub_head,,,,,0.0,1516.0,1516.0,0.1,0.0
+41G,Other Thefts,sub_head,400162.0,29.0,438950.0,31.5,199005.0,151433.0,350438.0,24.9,9.9
+42,Snatching,head,,,,,0.0,12644.0,12644.0,0.9,0.4
+43,Extortion,head,11802.0,0.9,12093.0,0.9,6373.0,5746.0,12119.0,0.9,0.3
+44,Robbery,head,28356.0,2.1,26599.0,1.9,13085.0,10060.0,23145.0,1.6,0.7
+45,Dacoity,head,2666.0,0.2,3792.0,0.3,1282.0,1111.0,2393.0,0.2,0.1
+45A,Dacoity,sub_head,2655.0,0.2,3778.0,0.3,1277.0,1096.0,2373.0,0.2,0.1
+45B,Dacoity with Murder,sub_head,11.0,0.0,14.0,0.0,5.0,15.0,20.0,0.0,0.0
+46,Attempt to Commit Dacoity/Robbery,head,484.0,0.0,505.0,0.0,202.0,185.0,387.0,0.0,0.0
+47,Making Preparation and Assembly for committing Dacoity,head,4080.0,0.3,4016.0,0.3,1809.0,1189.0,2998.0,0.2,0.1
+48,Criminal Misappropriation,head,158.0,0.0,119.0,0.0,100.0,131.0,231.0,0.0,0.0
+49,Criminal Breach of Trust,head,21814.0,1.6,22759.0,1.6,13457.0,7794.0,21251.0,1.5,0.6
+50,Dishonestly Receiving/Dealing-in Stolen Property,head,9939.0,0.7,11271.0,0.8,5114.0,4244.0,9358.0,0.7,0.3
+51,Burglary,head,107222.0,7.8,107573.0,7.7,54817.0,52715.0,107532.0,7.7,3.0
+51A,Day Time,sub_head,17501.0,1.3,18269.0,1.3,9432.0,9038.0,18470.0,1.3,0.5
+51B,Night,sub_head,89721.0,6.5,89304.0,6.4,45385.0,43677.0,89062.0,6.3,2.5
+,Offences against Property (Total of Sl. 41-51),group_total,839252.0,60.8,878307.0,63.1,417378.0,396625.0,814003.0,57.9,23.0
+52,Counterfeiting,head,670.0,0.0,661.0,0.0,474.0,272.0,746.0,0.1,0.0
+52A,Counterfeit Coin,sub_head,10.0,0.0,16.0,0.0,5.0,20.0,25.0,0.0,0.0
+52B,Counterfeiting Government Stamp,sub_head,1.0,0.0,1.0,0.0,0.0,3.0,3.0,0.0,0.0
+52C,Counterfeiting of Seal or Mark,sub_head,12.0,0.0,15.0,0.0,11.0,8.0,19.0,0.0,0.0
+52D,Counterfeit Currency & Bank notes,sub_head,647.0,0.0,629.0,0.0,458.0,241.0,699.0,0.0,0.0
+53,"Forgery, Cheating & Fraud",head,170901.0,12.4,181553.0,13.0,129580.0,62802.0,192382.0,13.7,5.4
+53A,Fraud,sub_head,29492.0,2.1,46916.0,3.4,34320.0,19452.0,53772.0,3.8,1.5
+53A.1,Bank,sub_head,2814.0,0.2,6011.0,0.4,3430.0,3138.0,6568.0,0.5,0.2
+53A.2,ATMs,sub_head,2569.0,0.2,3198.0,0.2,1533.0,1139.0,2672.0,0.2,0.1
+53A.3,Credit Card/Debit Card,sub_head,3357.0,0.2,2753.0,0.2,2859.0,2199.0,5058.0,0.4,0.1
+53A.4,Other Frauds,sub_head,20752.0,1.5,34954.0,2.5,26498.0,12976.0,39474.0,2.8,1.1
+53B,Cheating,sub_head,121417.0,8.8,112113.0,8.1,78912.0,37307.0,116219.0,8.3,3.3
+53C,Forgery,sub_head,19992.0,1.4,22524.0,1.6,16348.0,6043.0,22391.0,1.6,0.6
+,Offences Relating to Documents & Property Marks (Total of 52&53),group_total,171571.0,12.4,182214.0,13.1,130054.0,63074.0,193128.0,13.7,5.4
+54,Abetment outside India for offence in India,head,,,,,0.0,1.0,1.0,0.0,0.0
+55,Offences relating to Elections,head,931.0,0.1,2124.0,0.2,1922.0,119.0,2041.0,0.1,0.1
+56,Disobedience to order duly promulgated by Public Servant,head,67350.0,4.9,52207.0,3.7,22867.0,33220.0,56087.0,4.0,1.6
+57,Harbouring an Offender,head,75.0,0.0,54.0,0.0,32.0,28.0,60.0,0.0,0.0
+58,Rash Driving on Public way,head,489722.0,35.5,526507.0,37.8,230829.0,204344.0,435173.0,31.0,12.3
+59,Obstruction on Public way,head,93548.0,6.8,151469.0,10.9,74917.0,67198.0,142115.0,10.1,4.0
+60,Sale of obscene Books/Objects,head,49.0,0.0,283.0,0.0,28.0,64.0,92.0,0.0,0.0
+61,Obscene Acts and Songs at Public Places,head,25362.0,1.8,32786.0,2.4,20486.0,20433.0,40919.0,2.9,1.2
+62,Offences relating to Religion,head,1872.0,0.1,2186.0,0.2,1206.0,1100.0,2306.0,0.2,0.1
+63,Cheating by Impersonation,head,692.0,0.1,406.0,0.0,328.0,385.0,713.0,0.1,0.0
+64,Offences related to Mischief,head,3441.0,0.2,3707.0,0.3,2294.0,3067.0,5361.0,0.4,0.2
+65,Arson,head,7811.0,0.6,13626.0,1.0,4663.0,2845.0,7508.0,0.5,0.2
+66,Criminal Trespass,head,45299.0,3.3,44695.0,3.2,25449.0,13253.0,38702.0,2.8,1.1
+67,Circulate False/Fake News/Rumours,head,858.0,0.1,1087.0,0.1,977.0,1426.0,2403.0,0.2,0.1
+E6,Offences relating to Adulteration or Sale of Food/Drugs,legacy,4694.0,0.3,565.0,0.0,,,,,
+E7,Criminal Intimidation,legacy,150932.0,10.9,167178.0,12.0,,,,,
+A1,Insult to the Modesty of Women,legacy,8972.0,0.7,8823.0,0.6,,,,,
+A2,Cruelty by Husband or his Relatives,legacy,140019.0,10.1,133676.0,9.6,,,,,
+,"Misc. BNS/IPC Crimes (Total of 54- 57,E6-E7&A1-A2)",group_total,1041627.0,75.5,1141379.0,82.0,385998.0,347483.0,733481.0,52.2,20.7
+68,Other BNS/IPC crimes,head,292964.0,21.2,316982.0,22.8,296526.0,306280.0,602806.0,42.9,17.0
+,Total Cognizable BNS/IPC crimes,grand_total,3561379.0,258.1,3763102.0,270.3,1903047.0,1641561.0,3544608.0,252.3,100.0

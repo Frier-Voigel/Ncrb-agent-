@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NCRB Crime Explorer</title>
+<style>
+  :root { --bg:#f7f5f0; --card:#fff; --ink:#1b1b1b; --muted:#5f5b53; --line:#ddd8cc; --accent:#1f4fd8; --ok:#17663a; --warn:#9a4a00; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; color-scheme: light; }
+  header, main, footer { max-width:1120px; margin:0 auto; padding:0 16px; }
+  header { padding-top:24px; padding-bottom:8px; }
+  h1 { margin:0; font-size:1.5rem; }
+  header p { margin:4px 0 0; color:var(--muted); }
+  main { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:24px; padding-top:16px; padding-bottom:24px; }
+  @media (max-width: 860px) { main { grid-template-columns:minmax(0,1fr); } }
+  section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  h2 { margin:0 0 12px; font-size:1.05rem; }
+  .years { display:flex; gap:8px; margin-bottom:12px; }
+  .years button, .chips button, #go { font:inherit; border:1px solid var(--line); background:#fff; border-radius:8px; padding:6px 12px; cursor:pointer; }
+  .years button[aria-pressed="true"] { background:var(--ink); color:#fff; border-color:var(--ink); }
+  #go { background:var(--accent); color:#fff; border-color:var(--accent); }
+  #go:disabled { opacity:.6; cursor:wait; }
+  #grid { display:grid; grid-template-columns:repeat(10,1fr); grid-auto-rows:auto; gap:4px; max-width:560px; }
+  .tile { aspect-ratio:1; border:0; border-radius:6px; padding:2px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; font:inherit; line-height:1.1; }
+  .tile .ab { font-weight:700; font-size:clamp(10px,2vw,14px); }
+  .tile .v { font-size:clamp(9px,1.7vw,12px); }
+  .tile.hl { box-shadow:0 0 0 2px #fff, 0 0 0 5px var(--accent); position:relative; z-index:1; }
+  .tile:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  .legend { display:flex; flex-wrap:wrap; gap:4px 12px; margin-top:12px; font-size:.85rem; }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .legend i { width:16px; height:16px; border-radius:4px; border:1px solid #0002; display:inline-block; }
+  #detail { margin:12px 0 0; min-height:3em; font-size:.95rem; }
+  .small { color:var(--muted); font-size:.85rem; }
+  form { display:flex; gap:8px; }
+  input[type=text] { flex:1; min-width:0; font:inherit; padding:8px 10px; border:1px solid var(--line); border-radius:8px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin:10px 0; }
+  .chips button { font-size:.85rem; padding:4px 10px; }
+  .test { display:block; margin:6px 0 0; font-size:.85rem; color:var(--muted); }
+  #out { margin-top:14px; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:999px; font-size:.85rem; font-weight:600; border:1px solid; }
+  .badge.verified { color:var(--ok); border-color:var(--ok); }
+  .badge.flagged, .badge.error { color:var(--warn); border-color:var(--warn); }
+  .badge.out_of_scope { color:var(--muted); border-color:var(--muted); }
+  #answer p { margin:.6em 0; }
+  .issues { color:var(--warn); font-size:.9rem; }
+  table { border-collapse:collapse; width:100%; font-size:.85rem; margin:8px 0; }
+  th, td { text-align:left; padding:4px 6px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-weight:600; }
+  td.n { text-align:right; font-variant-numeric:tabular-nums; }
+  details { margin-top:8px; font-size:.9rem; }
+  details ol { padding-left:20px; margin:6px 0; }
+  .agent { font-weight:600; }
+  footer { padding-bottom:32px; color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>NCRB Crime Explorer</h1>
+  <p>State and UT crime rates from the NCRB "Crime in India" report, with answers checked by a second model.</p>
+</header>
+
+<main>
+  <section aria-labelledby="maphead">
+    <h2 id="maphead">Crime rate per lakh population</h2>
+    <div class="years" role="group" aria-label="Year">
+      <button data-y="2022" aria-pressed="false">2022</button>
+      <button data-y="2023" aria-pressed="false">2023</button>
+      <button data-y="2024" aria-pressed="true">2024</button>
+    </div>
+    <div id="grid" role="group" aria-label="Tile map of India, one tile per state or union territory"></div>
+    <div class="legend" id="legend"></div>
+    <p id="detail" aria-live="polite">Click a tile for details.</p>
+    <p class="small" id="mapnote"></p>
+  </section>
+
+  <section aria-labelledby="askhead">
+    <h2 id="askhead">Ask a question</h2>
+    <form id="form">
+      <input id="q" type="text" maxlength="500" placeholder="e.g. Which 5 states have the highest crime rate?" aria-label="Your question">
+      <button id="go" type="submit">Ask</button>
+    </form>
+    <label class="test"><input type="checkbox" id="plant"> Test mode: inject a wrong number into the draft to show the verifier catching it</label>
+    <div class="chips" id="chips"></div>
+    <div id="out" aria-live="polite"></div>
+  </section>
+</main>
+
+<footer>
+  Source: NCRB Crime in India, state-wise IPC/BNS cognizable cases (special and local laws are not included).
+  Crime rates for 2022 and 2023 are estimates using 2024 population; chargesheet rate exists only for 2024.
+  Colours use quantile bins because Delhi's rate is far above every other state. Crime types are available nationally only, not by state.
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const COLORS = ["#ffffd4", "#fed98e", "#fe9929", "#d95f0e", "#993404"];
+const fmt = v => v == null ? "–" : typeof v === "number" ? v.toLocaleString("en-IN", {maximumFractionDigits: 1}) : String(v);
+const EXAMPLES = [
+  "Which 5 states have the highest crime rate in 2024?",
+  "How did Kerala's crime rate change from 2022 to 2024?",
+  "Compare Maharashtra and Tamil Nadu",
+  "Which states saw the biggest rise in cases from 2023 to 2024?",
+  "What are the most common crime types in India in 2024?"
+];
+let mapData = null, hl = new Set();
+
+function el(tag, text, cls) {
+  const e = document.createElement(tag);
+  if (text != null) e.textContent = text;
+  if (cls) e.className = cls;
+  return e;
+}
+
+async function loadMap(year) {
+  document.querySelectorAll(".years button").forEach(b => b.setAttribute("aria-pressed", b.dataset.y == year));
+  const r = await fetch("/map?year=" + year);
+  mapData = await r.json();
+  drawMap();
+}
+
+function drawMap() {
+  const g = $("#grid");
+  g.replaceChildren();
+  for (const s of mapData.states) {
+    const b = el("button", null, "tile" + (hl.has(s.state) ? " hl" : ""));
+    b.style.gridRow = s.row + 1;
+    b.style.gridColumn = s.col + 1;
+    b.style.background = COLORS[s.bin];
+    b.style.color = s.bin >= 3 ? "#fff" : "#1b1b1b";
+    b.append(el("span", s.abbr, "ab"), el("span", Math.round(s.crime_rate), "v"));
+    b.setAttribute("aria-label", `${s.state}, ${fmt(s.crime_rate)} per lakh`);
+    b.onclick = () => showState(s);
+    g.append(b);
+  }
+  const br = mapData.breaks, labels = [`under ${br[0]}`, `${br[0]} to ${br[1]}`, `${br[1]} to ${br[2]}`, `${br[2]} to ${br[3]}`, `${br[3]} and above`];
+  const lg = $("#legend");
+  lg.replaceChildren();
+  labels.forEach((t, i) => {
+    const sw = el("i"); sw.style.background = COLORS[i];
+    const sp = el("span"); sp.append(sw, t); lg.append(sp);
+  });
+  $("#mapnote").textContent = mapData.estimated ? "Estimated rates: cases divided by 2024 population." : "";
+}
+
+function showState(s) {
+  let t = `${s.state} (${s.state_type}): ${fmt(s.total_cases)} cases, ${fmt(s.crime_rate)} per lakh population`;
+  if (s.chargesheet_rate != null) t += `, chargesheet rate ${fmt(s.chargesheet_rate)}`;
+  if (s.notes) t += `. Note: ${s.notes.split(" | ").filter(n => !n.startsWith("Rate estimated")).join(". ")}`;
+  $("#detail").textContent = t;
+}
+
+const BADGE = {
+  verified: "Verified against NCRB data",
+  flagged: "Flagged: could not be fully verified",
+  out_of_scope: "Outside the available data",
+  error: "Service busy"
+};
+
+function table(rows) {
+  const t = el("table"), cols = Object.keys(rows[0]);
+  const head = el("tr");
+  cols.forEach(c => head.append(el("th", c.replaceAll("_", " "))));
+  t.append(head);
+  rows.forEach(r => {
+    const tr = el("tr");
+    cols.forEach(c => tr.append(el("td", fmt(r[c]), typeof r[c] === "number" ? "n" : "")));
+    t.append(tr);
+  });
+  return t;
+}
+
+function render(d) {
+  const out = $("#out");
+  out.replaceChildren();
+  out.append(el("span", BADGE[d.status] || d.status, "badge " + d.status));
+  if (d.cached) out.append(el("span", " (saved answer)", "small"));
+  const a = el("div"); a.id = "answer";
+  (d.answer || "").split("\n").forEach(p => a.append(el("p", p)));
+  out.append(a);
+  if (d.issues && d.issues.length && d.status === "flagged") {
+    const ul = el("ul", null, "issues");
+    d.issues.forEach(i => ul.append(el("li", i)));
+    out.append(ul);
+  }
+  (d.tables || []).forEach(t => { out.append(el("div", t.title, "small")); out.append(table(t.rows)); });
+  if (d.steps && d.steps.length) {
+    const det = el("details"), sum = el("summary", `How this was checked (${d.steps.length} steps)`), ol = el("ol");
+    d.steps.forEach(s => { const li = el("li"); li.append(el("span", s.agent + ": ", "agent"), s.text); ol.append(li); });
+    det.append(sum, ol); out.append(det);
+  }
+  hl = new Set(d.highlight || []);
+  drawMap();
+}
+
+async function ask(q) {
+  if (!q.trim()) return;
+  $("#go").disabled = true;
+  $("#out").replaceChildren(el("p", "Thinking... this can take up to 20 seconds.", "small"));
+  try {
+    const r = await fetch("/ask", {method: "POST", headers: {"Content-Type": "application/json"},
+                                   body: JSON.stringify({question: q, plant_error: $("#plant").checked})});
+    render(await r.json());
+  } catch (e) {
+    render({status: "error", answer: "Could not reach the server. Check your connection and try again."});
+  }
+  $("#go").disabled = false;
+}
+
+$("#form").onsubmit = e => { e.preventDefault(); ask($("#q").value); };
+EXAMPLES.forEach(q => {
+  const b = el("button", q); b.type = "button";
+  b.onclick = () => { $("#q").value = q; ask(q); };
+  $("#chips").append(b);
+});
+document.querySelectorAll(".years button").forEach(b => b.onclick = () => loadMap(b.dataset.y));
+loadMap(2024);
+</script>
+</body>
+</html>

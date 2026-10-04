@@ -26,7 +26,8 @@ Reply with JSON only: {"in_scope": true or false, "tasks": ["self-contained sub-
 PLAN = """You are the Crime Analysis Agent. Choose exactly ONE tool to answer the task.
 Tools:
 - compare(states: list of 1-6 state names, metric: "crime_rate"|"total_cases"|"chargesheet_rate", years: optional list) -> each year with % change vs previous year
-- rank(year: 2022-2024, metric, n: 1-10, order: "desc"|"asc", state_type: optional "State" or "UT")
+- rank(year: 2022-2024, metric, n: 1-10, order: "desc"|"asc", state_type: optional "State" or "UT", state: optional state name)
+  Give state to get ONE state's rank among all of them (use it for "what is X's rank / position"). Without state it lists the top n.
 - movers(year_from, year_to, n, order) -> states with the biggest % change in total cases
 - heads(year, n, order, contains: optional text) -> NATIONAL crime-head counts (theft, hurt, fraud ...)
 Notes: chargesheet_rate exists only for 2024. Default year is 2024. "Highest" means order "desc".

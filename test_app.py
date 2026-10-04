@@ -9,12 +9,28 @@ def test_tiles_cover_every_state():
     assert len(cells) == len(set(cells))
 
 
+def test_map_file_names_resolve():
+    r = tools.resolve(["NCT of Delhi", "Orissa", "Daman and Diu", "Chattisgarh", "Narnia"])
+    assert r == {"NCT of Delhi": "Delhi", "Orissa": "Odisha", "Daman and Diu": "Dadra & Nagar Haveli and Daman & Diu",
+                 "Chattisgarh": "Chhattisgarh", "Narnia": None}
+    assert all(tools.resolve([s])[s] == s for s in tools.STATES)
+
+
 def test_known_answers():
     top = tools.run({"tool": "rank", "args": {"year": 2024, "n": 1}})["rows"][0]
     assert (top["state"], top["crime_rate"]) == ("Delhi", 1258.5)
     assert tools.run({"tool": "movers", "args": {}})["rows"][0]["state"] == "Telangana"
     assert tools.run({"tool": "heads", "args": {"n": 1}})["rows"][0]["crime_head"] == "Theft"
     assert "error" in tools.run({"tool": "rank", "args": {"year": 2023, "metric": "chargesheet_rate"}})
+
+
+def test_rank_of_one_state():
+    r = tools.run({"tool": "rank", "args": {"state": "west benagal"}})  # typo on purpose
+    row = r["rows"][0]
+    assert (row["state"], row["rank"], row["out_of"]) == ("West Bengal", 21, 36)
+    assert tools.check(r) == []
+    row["rank"] = 3
+    assert tools.check(r)
 
 
 def test_verifier_catches_a_wrong_number():

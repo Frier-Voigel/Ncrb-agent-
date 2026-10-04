@@ -46,6 +46,31 @@ def _state(name):
     raise ValueError(f"unknown state '{name}'")
 
 
+def _norm(s):
+    return " ".join(re.sub(r"[^a-z0-9 ]", " ", str(s).lower().replace("&", " and ")).split())
+
+
+_KEY = {_norm(s): s for s in STATES}
+_KEY.update({  # other spellings found in map files
+    "nct of delhi": "Delhi", "orissa": "Odisha", "pondicherry": "Puducherry", "uttaranchal": "Uttarakhand",
+    "andaman and nicobar islands": "A&N Islands", "andaman and nicobar": "A&N Islands",
+    "andaman nicobar": "A&N Islands", "dadra and nagar haveli": "Dadra & Nagar Haveli and Daman & Diu",
+    "daman and diu": "Dadra & Nagar Haveli and Daman & Diu",
+})
+
+
+def resolve(names):
+    """Map map-file region names to our state names (None when nothing matches)."""
+    out = {}
+    for n in names:
+        k = _norm(n)
+        if k not in _KEY:
+            close = difflib.get_close_matches(k, list(_KEY), n=1, cutoff=0.85)
+            k = close[0] if close else None
+        out[n] = _KEY.get(k)
+    return out
+
+
 def _py(df):
     """DataFrame to plain Python records (NaN becomes None) so it is valid JSON."""
     return df.astype(object).where(df.notna(), None).to_dict("records")
@@ -91,7 +116,7 @@ def compare(states, metric="crime_rate", years=None):
     return _out("compare", {"states": sts, "metric": metric, "years": years}, _py(d[cols]), _notes(d, metric))
 
 
-def rank(year=2024, metric="crime_rate", n=5, order="desc", state_type=None):
+def rank(year=2024, metric="crime_rate", n=5, order="desc", state_type=None, state=None):
     year, metric, n = _year(year), _metric(metric), max(1, min(int(n), 10))
     if order not in ("asc", "desc") or state_type not in (None, "State", "UT"):
         raise ValueError("order is asc|desc, state_type is State|UT")
@@ -101,11 +126,20 @@ def rank(year=2024, metric="crime_rate", n=5, order="desc", state_type=None):
     d = d.dropna(subset=[metric])
     if d.empty:
         raise ValueError(f"{metric} is not available for {year}")
-    d = d.sort_values(metric, ascending=order == "asc", kind="stable").head(n)
+    d = d.sort_values(metric, ascending=order == "asc", kind="stable").reset_index(drop=True)
+    args = {"year": year, "metric": metric, "n": n, "order": order, "state_type": state_type, "state": None}
+    if state:  # one state's position among all of them
+        s = _state(state)
+        hit = d.index[d.state == s]
+        if len(hit) == 0:
+            raise ValueError(f"{s} has no {metric} for {year}" + (f" among the {state_type}s" if state_type else ""))
+        rows = _py(d.loc[hit, ["state", "state_type", "year", metric]])
+        rows[0]["rank"], rows[0]["out_of"] = int(hit[0]) + 1, len(d)
+        return _out("rank", {**args, "state": s}, rows, _notes(d.loc[hit], metric))
+    d = d.head(n)
     rows = _py(d[["state", "state_type", "year", metric]])
     for i, r in enumerate(rows, 1):
         r["rank"] = i
-    args = {"year": year, "metric": metric, "n": n, "order": order, "state_type": state_type}
     return _out("rank", args, rows, _notes(d, metric))
 
 
@@ -200,7 +234,12 @@ def check(res):
         pool = [(num(v[m]), k[0]) for k, v in raw.items()
                 if k[1] == y and num(v[m]) is not None and (not a["state_type"] or v["state_type"] == a["state_type"])]
         pool.sort(key=lambda x: x[0], reverse=a["order"] == "desc")
-        if [s for _, s in pool[:len(rows)]] != [r["state"] for r in rows]:
+        names = [s for _, s in pool]
+        if a.get("state"):
+            r = rows[0]
+            if r["state"] not in names or (r["rank"], r["out_of"]) != (names.index(r["state"]) + 1, len(names)):
+                bad.append(f"{r['state']}: rank {r['rank']} of {r['out_of']} differs from recomputed rank")
+        elif names[:len(rows)] != [r["state"] for r in rows]:
             bad.append("ranking differs from recomputed ranking")
     elif t == "movers":
         yf, yt = a["year_from"], a["year_to"]

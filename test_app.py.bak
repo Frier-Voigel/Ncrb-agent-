@@ -20,29 +20,8 @@ def test_known_answers():
     top = tools.run({"tool": "rank", "args": {"year": 2024, "n": 1}})["rows"][0]
     assert (top["state"], top["crime_rate"]) == ("Delhi", 1258.5)
     assert tools.run({"tool": "movers", "args": {}})["rows"][0]["state"] == "Telangana"
-    assert tools.run({"tool": "heads", "args": {"n": 1}})["rows"][0]["crime_type"] == "Theft"
+    assert tools.run({"tool": "heads", "args": {"n": 1}})["rows"][0]["crime_head"] == "Theft"
     assert "error" in tools.run({"tool": "rank", "args": {"year": 2023, "metric": "chargesheet_rate"}})
-
-
-def test_every_stat_row_has_crime_type():
-    for plan in ({"tool": "rank", "args": {"n": 2}}, {"tool": "compare", "args": {"states": ["Kerala"]}},
-                 {"tool": "movers", "args": {}}, {"tool": "heads", "args": {"n": 2}}):
-        res = tools.run(plan)
-        assert all(r["crime_type"] for r in res["rows"]), plan
-        assert tools.check(res) == []
-    assert all(s["crime_type"] == tools.ALL_CRIMES for s in tools.map_data(2024)["states"])
-
-
-def test_crime_breakdown_and_filter():
-    top = tools.crime_breakdown(2024, None, 3)["rows"]
-    assert top[0]["crime_type"] == "Theft" and len(top) == 3
-    one = tools.crime_breakdown(2024, ["Rape", "Theft"])["rows"]
-    assert {r["crime_type"] for r in one} == {"Rape", "Theft"}
-    try:
-        tools.crime_breakdown(2024, ["Nope"])
-        assert False
-    except ValueError:
-        pass
 
 
 def test_rank_of_one_state():

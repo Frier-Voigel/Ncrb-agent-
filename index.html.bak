@@ -53,19 +53,6 @@
   details { margin-top:8px; font-size:.9rem; }
   details ol { padding-left:20px; margin:6px 0; }
   .agent { font-weight:600; }
-  .wide { grid-column:1 / -1; }
-  .ctl { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-start; margin-bottom:12px; }
-  .ctl label { font-size:.85rem; color:var(--muted); display:flex; flex-direction:column; gap:4px; }
-  select { font:inherit; border:1px solid var(--line); border-radius:8px; padding:6px 8px; background:#fff; max-width:100%; }
-  select[multiple] { min-width:260px; height:120px; }
-  .ctl button { font:inherit; border:1px solid var(--line); background:#fff; border-radius:8px; padding:6px 12px; cursor:pointer; align-self:flex-end; }
-  .bars { display:grid; gap:4px; margin:8px 0 12px; }
-  .bar { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) 70px; gap:8px; align-items:center; font-size:.85rem; }
-  .bar .lab { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .bar .track { background:var(--bg); border-radius:4px; height:14px; }
-  .bar .fill { background:var(--accent); height:100%; border-radius:4px; }
-  .bar .val { text-align:right; font-variant-numeric:tabular-nums; }
-  .tag { display:inline-block; padding:1px 8px; border-radius:999px; border:1px solid var(--line); font-size:.8rem; color:var(--muted); }
   footer { padding-bottom:32px; color:var(--muted); font-size:.85rem; }
 </style>
 </head>
@@ -85,7 +72,6 @@
     </div>
     <div id="map" role="application" aria-label="Map of India, click a state for details"></div>
     <div id="grid" role="group" aria-label="Tile map of India, one tile per state or union territory"></div>
-    <p class="small">Crime type shown: <span class="tag" id="maptype">All crimes (IPC/BNS total)</span></p>
     <div class="legend" id="legend"></div>
     <p id="detail" aria-live="polite">Click a tile for details.</p>
     <p class="small" id="mapnote"></p>
@@ -101,26 +87,12 @@
     <div class="chips" id="chips"></div>
     <div id="out" aria-live="polite"></div>
   </section>
-
-  <section class="wide" aria-labelledby="typehead">
-    <h2 id="typehead">Crime types in India</h2>
-    <p class="small">National counts for each crime type. The state map above uses all crimes together because NCRB crime types are not split by state in our data.</p>
-    <div class="ctl">
-      <label>Crime type (hold Ctrl or Cmd to pick several)
-        <select id="typesel" multiple aria-label="Filter by crime type"></select>
-      </label>
-      <button id="typeclear" type="button">Show top 15</button>
-    </div>
-    <div class="bars" id="typebars" aria-label="Cases by crime type"></div>
-    <div id="typetable"></div>
-    <p class="small" id="typenote"></p>
-  </section>
 </main>
 
 <footer>
   Source: NCRB Crime in India, state-wise IPC/BNS cognizable cases (special and local laws are not included).
   Crime rates for 2022 and 2023 are estimates using 2024 population; chargesheet rate exists only for 2024.
-  Colours use quantile bins because Delhi's rate is far above every other state. Crime types are available nationally only, not by state; state rows are labelled "All crimes".
+  Colours use quantile bins because Delhi's rate is far above every other state. Crime types are available nationally only, not by state.
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -135,7 +107,7 @@ const EXAMPLES = [
   "Which states saw the biggest rise in cases from 2023 to 2024?",
   "What are the most common crime types in India in 2024?"
 ];
-let mapData = null, byState = {}, hl = new Set(), selected = null, curYear = 2024, typesLoaded = false;
+let mapData = null, byState = {}, hl = new Set(), selected = null;
 let geo;          // undefined = not tried yet, null = using the tile map, otherwise the Leaflet layer
 let canon = {};   // region name in the map file -> our state name
 const NAME_KEYS = ["name", "NAME_1", "ST_NM", "st_nm", "STATE", "State", "state", "NAME", "Name"];
@@ -176,7 +148,7 @@ async function initLeaflet() {
         mouseover: () => l.setStyle({weight: 3}),
         mouseout: () => l.setStyle(styleFor(f))
       });
-      l.bindTooltip(() => { const s = stateOf(f); return el("span", s ? `${s.state} (${s.crime_type}): ${fmt(s.crime_rate)} per lakh` : `${nameOf(f)}: no data`); });
+      l.bindTooltip(() => { const s = stateOf(f); return el("span", s ? `${s.state}: ${fmt(s.crime_rate)} per lakh` : `${nameOf(f)}: no data`); });
     }
   }).addTo(map);
   map.fitBounds(layer.getBounds(), {padding: [10, 10]});
@@ -185,7 +157,6 @@ async function initLeaflet() {
 
 async function loadMap(year) {
   document.querySelectorAll(".years button").forEach(b => b.setAttribute("aria-pressed", b.dataset.y == year));
-  curYear = +year;
   const r = await fetch("/map?year=" + year);
   mapData = await r.json();
   byState = Object.fromEntries(mapData.states.map(s => [s.state, s]));
@@ -194,7 +165,6 @@ async function loadMap(year) {
     catch (e) { geo = null; console.warn("Using the tile map instead:", e.message); }
   }
   drawMap();
-  loadTypes();
 }
 
 function restyle() {
@@ -215,7 +185,7 @@ function drawTiles() {
     b.style.background = COLORS[s.bin];
     b.style.color = s.bin >= 3 ? "#fff" : "#1b1b1b";
     b.append(el("span", s.abbr, "ab"), el("span", Math.round(s.crime_rate), "v"));
-    b.setAttribute("aria-label", `${s.state}, ${s.crime_type}, ${fmt(s.crime_rate)} per lakh`);
+    b.setAttribute("aria-label", `${s.state}, ${fmt(s.crime_rate)} per lakh`);
     b.onclick = () => showState(s);
     g.append(b);
   }
@@ -230,63 +200,17 @@ function drawMap() {
     const sw = el("i"); sw.style.background = COLORS[i];
     const sp = el("span"); sp.append(sw, t); lg.append(sp);
   });
-  $("#maptype").textContent = mapData.crime_type;
-  mapNote();
+  $("#mapnote").textContent = mapData.estimated ? "Estimated rates: cases divided by 2024 population." : "";
 }
 
 function showState(s) {
-  let t = `${s.state} (${s.state_type}) [${s.crime_type}]: ${fmt(s.total_cases)} cases, ${fmt(s.crime_rate)} per lakh population`;
+  let t = `${s.state} (${s.state_type}): ${fmt(s.total_cases)} cases, ${fmt(s.crime_rate)} per lakh population`;
   if (s.chargesheet_rate != null) t += `, chargesheet rate ${fmt(s.chargesheet_rate)}`;
   if (s.notes) t += `. Note: ${s.notes.split(" | ").filter(n => !n.startsWith("Rate estimated")).join(". ")}`;
   $("#detail").textContent = t;
   selected = s.state;
   if (geo) restyle();
 }
-
-function mapNote() {
-  const t = [];
-  if (mapData && mapData.estimated) t.push("Estimated rates: cases divided by 2024 population.");
-  if (chosenTypes().length) t.push("The map still shows all crimes together; crime types are national only.");
-  $("#mapnote").textContent = t.join(" ");
-}
-
-function chosenTypes() { return [...$("#typesel").selectedOptions].map(o => o.value); }
-
-async function loadTypes() {
-  const types = chosenTypes();
-  try {
-    const r = await fetch(`/crime_types?year=${curYear}&n=${types.length ? 70 : 15}&types=${encodeURIComponent(types.join("|"))}`);
-    if (!r.ok) throw new Error("bad response");
-    const d = await r.json();
-    if (!typesLoaded) {   // fill the dropdown once
-      d.available.forEach(t => { const o = el("option", t); o.value = t; $("#typesel").append(o); });
-      typesLoaded = true;
-    }
-    drawTypes(d);
-  } catch (e) {
-    $("#typebars").replaceChildren(el("p", "Could not load crime types.", "small"));
-    $("#typetable").replaceChildren();
-  }
-}
-
-function drawTypes(d) {
-  const max = Math.max(...d.rows.map(r => r.cases), 1), bars = $("#typebars");
-  bars.replaceChildren();
-  d.rows.forEach(r => {
-    const row = el("div", null, "bar"), track = el("div", null, "track"), fill = el("div", null, "fill");
-    fill.style.width = (r.cases / max * 100) + "%";
-    track.append(fill);
-    const lab = el("span", r.crime_type, "lab"); lab.title = r.crime_type;
-    row.append(lab, track, el("span", fmt(r.cases), "val"));
-    bars.append(row);
-  });
-  $("#typetable").replaceChildren(table(d.rows));
-  $("#typenote").textContent = `${d.year}, ${d.scope}. ` + d.notes.join(" ");
-  mapNote();
-}
-
-$("#typesel").onchange = loadTypes;
-$("#typeclear").onclick = () => { [...$("#typesel").options].forEach(o => o.selected = false); loadTypes(); };
 
 const BADGE = {
   verified: "Verified against NCRB data",

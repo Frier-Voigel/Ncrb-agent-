@@ -13,7 +13,6 @@ H = pd.read_csv(D / "crime_heads_india.csv", dtype={"sl": str})
 STATES = sorted(S.state.unique())
 METRICS = ("crime_rate", "total_cases", "chargesheet_rate")
 YEARS = (2022, 2023, 2024)
-ALL_CRIMES = "All crimes (IPC/BNS total)"  # state files hold totals only, so this is their crime_type
 
 # name: (row, col, abbreviation) on the tile map, north at the top
 TILES = {
@@ -113,8 +112,7 @@ def compare(states, metric="crime_rate", years=None):
     if years:
         years = [_year(y) for y in years]
         d = d[d.year.isin(years)]
-    d["crime_type"] = ALL_CRIMES
-    cols = ["state", "crime_type", "year", metric, "pct_change_vs_prev_year"]
+    cols = ["state", "year", metric, "pct_change_vs_prev_year"]
     return _out("compare", {"states": sts, "metric": metric, "years": years}, _py(d[cols]), _notes(d, metric))
 
 
@@ -129,18 +127,17 @@ def rank(year=2024, metric="crime_rate", n=5, order="desc", state_type=None, sta
     if d.empty:
         raise ValueError(f"{metric} is not available for {year}")
     d = d.sort_values(metric, ascending=order == "asc", kind="stable").reset_index(drop=True)
-    d["crime_type"] = ALL_CRIMES
     args = {"year": year, "metric": metric, "n": n, "order": order, "state_type": state_type, "state": None}
     if state:  # one state's position among all of them
         s = _state(state)
         hit = d.index[d.state == s]
         if len(hit) == 0:
             raise ValueError(f"{s} has no {metric} for {year}" + (f" among the {state_type}s" if state_type else ""))
-        rows = _py(d.loc[hit, ["state", "state_type", "crime_type", "year", metric]])
+        rows = _py(d.loc[hit, ["state", "state_type", "year", metric]])
         rows[0]["rank"], rows[0]["out_of"] = int(hit[0]) + 1, len(d)
         return _out("rank", {**args, "state": s}, rows, _notes(d.loc[hit], metric))
     d = d.head(n)
-    rows = _py(d[["state", "state_type", "crime_type", "year", metric]])
+    rows = _py(d[["state", "state_type", "year", metric]])
     for i, r in enumerate(rows, 1):
         r["rank"] = i
     return _out("rank", args, rows, _notes(d, metric))
@@ -153,7 +150,6 @@ def movers(year_from=2023, year_to=2024, n=5, order="desc"):
     p = S.pivot(index="state", columns="year", values="total_cases")
     d = pd.DataFrame({"state": p.index, "cases_from": p[yf].values, "cases_to": p[yt].values})
     d["pct_change"] = ((d.cases_to / d.cases_from - 1) * 100).round(1)
-    d.insert(1, "crime_type", ALL_CRIMES)
     d = d.sort_values("pct_change", ascending=order == "asc", kind="stable").head(n)
     sub = S[S.state.isin(d.state) & S.year.isin([yf, yt])]
     notes = _notes(sub, "total_cases") + ["Changes are in total cases, not per-capita rates."]
@@ -171,40 +167,13 @@ def heads(year=2024, n=10, order="desc", contains=None):
     if contains:
         d = d[d.crime_head.str.contains(str(contains), case=False, regex=False)]
     d = d.sort_values(c, ascending=order == "asc", kind="stable").head(n)
-    d = d.rename(columns={c: "cases", r: "rate_per_lakh", "crime_head": "crime_type"})[["sl", "crime_type", "level", "cases", "rate_per_lakh"]]
+    d = d.rename(columns={c: "cases", r: "rate_per_lakh"})[["sl", "crime_head", "level", "cases", "rate_per_lakh"]]
     d["cases"] = d.cases.astype(int)
     notes = ["National totals only, not available by state.",
              "2022/2023 use IPC heads and 2024 uses BNS heads, so heads new in 2024 have no earlier value.",
              "The residual 'Other BNS/IPC crimes' bucket is left out of rankings."]
     args = {"year": year, "n": n, "order": order, "contains": contains}
     return _out("heads", args, _py(d), notes)
-
-
-def crime_type_list():
-    """Main crime types (heads) in the national file, for the filter dropdown."""
-    d = H[(H.level == "head") & ~H.crime_head.str.startswith("Other BNS/IPC")]
-    return sorted(d.crime_head.unique())
-
-
-def crime_breakdown(year=2024, types=None, n=15, order="desc"):
-    """National counts and rates per crime_type, for the breakdown chart/table. `types` filters to chosen crime types."""
-    year, n = _year(year), max(1, min(int(n), 70))
-    if order not in ("asc", "desc"):
-        raise ValueError("order is asc|desc")
-    c, r = f"cases_{year}", f"rate_{year}"
-    d = H[(H.level == "head") & ~H.crime_head.str.startswith("Other BNS/IPC")].dropna(subset=[c])
-    if types:
-        known = set(crime_type_list())
-        bad = [t for t in types if t not in known]
-        if bad:
-            raise ValueError(f"unknown crime type(s): {bad}")
-        d = d[d.crime_head.isin(types)]
-    d = d.sort_values(c, ascending=order == "asc", kind="stable").head(n)
-    d = d.rename(columns={c: "cases", r: "rate_per_lakh", "crime_head": "crime_type"})[["crime_type", "cases", "rate_per_lakh"]]
-    d["cases"] = d.cases.astype(int)
-    notes = ["National totals only: NCRB crime types are not split by state in our files.",
-             "2022/2023 use IPC heads and 2024 uses BNS heads, so some types have no value for earlier years."]
-    return {"year": year, "scope": "India (national)", "rows": _py(d), "notes": notes}
 
 
 TOOLS = {"compare": compare, "rank": rank, "movers": movers, "heads": heads}
@@ -226,10 +195,9 @@ def map_data(year=2024):
     breaks = [round(float(b), 1) for b in d.crime_rate.quantile([0.2, 0.4, 0.6, 0.8])]
     rows = _py(d[["state", "state_type", "total_cases", "crime_rate", "chargesheet_rate", "notes"]])
     for r in rows:
-        r["crime_type"] = ALL_CRIMES
         r["row"], r["col"], r["abbr"] = TILES[r["state"]]
         r["bin"] = bisect_right(breaks, r["crime_rate"])
-    return {"year": year, "crime_type": ALL_CRIMES, "estimated": year != 2024, "breaks": breaks, "states": rows}
+    return {"year": year, "estimated": year != 2024, "breaks": breaks, "states": rows}
 
 
 # ---------- Verification helpers (independent of the pandas code above) ----------
@@ -289,17 +257,17 @@ def check(res):
     elif t == "heads":
         y, col = a["year"], f"cases_{a['year']}"
         src = list(csv.DictReader(open(D / "crime_heads_india.csv", encoding="utf-8")))
-        by = {(x["sl"], x["crime_head"]): x for x in src}  # source file still uses crime_head
+        by = {(x["sl"], x["crime_head"]): x for x in src}
         for r in rows:
-            x = by.get((r["sl"], r["crime_type"]))
+            x = by.get((r["sl"], r["crime_head"]))
             if x is None or num(x[col]) != r["cases"]:
-                bad.append(f"{r['crime_type']}: result {r['cases']} but source {x and x[col]}")
+                bad.append(f"{r['crime_head']}: result {r['cases']} but source {x and x[col]}")
         lv = ("head", "sub_head") if a["contains"] else ("head",)
         pool = [x for x in src if x["level"] in lv and num(x[col]) is not None
                 and not x["crime_head"].startswith("Other BNS")
                 and (not a["contains"] or a["contains"].lower() in x["crime_head"].lower())]
         pool.sort(key=lambda x: num(x[col]), reverse=a["order"] == "desc")
-        if [x["crime_head"] for x in pool[:len(rows)]] != [r["crime_type"] for r in rows]:
+        if [x["crime_head"] for x in pool[:len(rows)]] != [r["crime_head"] for r in rows]:
             bad.append("crime-head ranking differs from recomputed ranking")
     return bad
 
